@@ -1,0 +1,94 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/oss/6-SDK-and-tool/SDK/1.sdk%E6%96%87%E6%A1%A3.html
+note: 'Inspur Cloud publishes first-party SDKs only for its Object Storage Service (OSS) —
+  C++, Java and Python — plus a C device SDK for the IoT platform. Nothing was found on npm,
+  Maven Central, NuGet, RubyGems, Packagist, crates.io or pkg.go.dev for the compute,
+  network, IAM or database APIs; those are documented as raw HTTP only. Only the Python SDK
+  is distributed through a public package registry; the Java SDK is a direct JAR download
+  from an OSS bucket and the C++ SDK is source-only. Registry checks run 2026-08-23 against
+  registry.npmjs.org, pypi.org, search.maven.org, azuresearch-usnc.nuget.org and
+  api.github.com.'
+packages:
+- language: python
+  registry: pypi
+  name: inspurcloud-oss-sdk
+  url: https://pypi.org/project/inspurcloud-oss-sdk/
+  install: pip install inspurcloud-oss-sdk
+  official: true
+  version: 1.1.2
+  published: '2024-02-01'
+  note: 'Sole release on PyPI. Package metadata names the author as "Inspur Cloud" and the
+    home page as https://cloud.inspur.com/, and the install command matches the one printed
+    in the OSS Python SDK installation page — first-party. The SDK documentation states
+    support for Python 3.6 and 3.7 only, which are both end-of-life.'
+- language: java
+  registry: cdn
+  name: inspur-cloud-oss-sdk
+  url: https://inspur-cloud-sdk.oss.cn-north-3.inspurcloudoss.com/java/inspur-cloud-oss-sdk-4.0.19.jar
+  install: 'Download the JAR and add it to the project (File > Project Structure > Modules >
+    Dependencies > + > JARs or directories). No Maven/Gradle coordinate is published.'
+  official: true
+  version: 4.0.19
+  published: '2023-05-12'
+  note: 'Not in Maven Central — a search of search.maven.org for "inspur" returns zero
+    artifacts. The version is pinned in the URL the docs publish. `published` is the
+    Last-Modified header returned by the OSS bucket on a HEAD request 2026-08-23 (HTTP 200,
+    10,527,548 bytes); the docs page itself is dated 2020-03-24.'
+- language: cpp
+  registry: github
+  name: inspur-oss-cpp-sdk
+  url: https://github.com/OpenInspur/inspur-oss-cpp-sdk
+  install: 'cmake .. && make && make install (requires CMake 3.1+, libcurl, openssl); on
+    Windows build inspurcloud-oss-cpp-sdk.sln'
+  official: true
+  version: null
+  published: '2020-08-13'
+  note: '浪潮云对象存储C++SDK, published in the OpenInspur GitHub organization. No tagged
+    release and no package-registry distribution, so there is no version to record;
+    `published` is the last push date on the repository as of 2026-08-23. The solution file
+    name inspurcloud-oss-cpp-sdk.sln in the Inspur Cloud docs matches this repository.'
+- language: c
+  registry: console-download
+  name: Inspur Cloud IoT device SDK (C)
+  url: https://console1.cloud.inspur.com/document/iot/6-SDK.html
+  install: Download the SDK tarball from the IoT console; build the samples with make.
+  official: true
+  version: null
+  published: null
+  note: 'Distributed only as a download from the authenticated IoT console, so no registry
+    metadata endpoint exists and no version or date can be read without an account. Built on
+    mbedTLS and jsmn; device certificates and private keys are downloaded from the console.'
+related_repositories:
+- url: https://github.com/OpenInspur/cloud-provider-inspur
+  name: cloud-provider-inspur
+  official: true
+  note: Kubernetes cloud-controller-manager for Inspur Cloud. Go. Last pushed 2020-02-24.
+- url: https://github.com/OpenInspur/instorage-k8s
+  name: instorage-k8s
+  official: true
+  note: Kubernetes drivers for Inspur storage systems. Go. Last pushed 2026-07-09 — the only
+    OpenInspur repository with activity in the last five years.
+- url: https://github.com/OpenInspur/ossfs
+  name: ossfs
+  official: true
+  note: FUSE filesystem over Inspur Cloud OSS. C++. Last pushed 2020-08-13.
+registries_checked:
+- registry: npm
+  result: 'no first-party SDK. A search for "inspur" returns 30 packages, all UI component
+    libraries, validators and third-party OpenClaw channel plugins; none is an Inspur Cloud
+    API client.'
+- registry: pypi
+  result: one first-party package (inspurcloud-oss-sdk)
+- registry: maven-central
+  result: 'zero artifacts for "inspur" (numFound 0)'
+- registry: nuget
+  result: 'one unrelated package (Inspur.Gsp.Gsf.Test), not an API client'
+- registry: rubygems
+  result: none
+- registry: packagist
+  result: none
+- registry: crates.io
+  result: none
+- registry: pkg.go.dev
+  result: no published module; the Go repositories live only on GitHub

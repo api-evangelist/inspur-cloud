@@ -1,0 +1,112 @@
+generated: '2026-08-23'
+method: probed
+source: direct HTTPS probes of every apis.yml host, 2026-08-23
+note: 'Every /.well-known/ path probed returned 404 or failed to complete a TLS handshake.
+  Inspur Cloud serves no discovery surface at any well-known location — no security.txt, no
+  OIDC discovery document, no OAuth authorization-server metadata, no api-catalog, no
+  ai-plugin. The 404 bodies on cloud.inspur.com are a genuine 138-byte nginx not-found page,
+  not an SPA catch-all, so these are true negatives rather than soft 200s. The
+  <service>.<region>.inspurcloudapi.com API hosts could not be probed at all: they present
+  TLS certificates that expired in 2020 and 2022 (see security/inspur-cloud-domain-security.yml).
+  No WellKnown or SecurityTxt pointer is emitted from this file — this document records an
+  absence.'
+hit_count: 0
+soft_404_control:
+  host: https://cloud.inspur.com
+  path: /.well-known/this-path-does-not-exist-ae-control
+  status: 404
+  bytes: 138
+hosts:
+- host: https://cloud.inspur.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://console1.cloud.inspur.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://en.inspur.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://ecs.cn-north-3.inspurcloudapi.com
+  unreachable: tls-certificate-expired-2020-12-09
+  documents:
+  - path: /.well-known/security.txt
+    status: 0
+  - path: /.well-known/openid-configuration
+    status: 0
+  - path: /.well-known/oauth-authorization-server
+    status: 0
+  - path: /.well-known/api-catalog
+    status: 0
+  - path: /.well-known/agent-card.json
+    status: 0
+  - path: /.well-known/agent.json
+    status: 0
+- host: https://iam.inspurcloudapi.com
+  unreachable: tls-certificate-name-mismatch
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 0
+  - path: /.well-known/oauth-authorization-server
+    status: 0
+  - path: /.well-known/agent-card.json
+    status: 0
+  - path: /.well-known/agent.json
+    status: 0
+other_probes:
+- url: https://cloud.inspur.com/llms.txt
+  status: 404
+- url: https://console1.cloud.inspur.com/llms.txt
+  status: 404
+- url: https://cloud.inspur.com/robots.txt
+  status: 504
+- url: https://console1.cloud.inspur.com/robots.txt
+  status: 404
+- url: https://cloud.inspur.com/openapi.json
+  status: 404
+- url: https://cloud.inspur.com/swagger.json
+  status: 403
+- url: https://console1.cloud.inspur.com/openapi.json
+  status: 404
+- url: https://console1.cloud.inspur.com/swagger.json
+  status: 404
+- url: https://console1.cloud.inspur.com/v2/api-docs
+  status: 404

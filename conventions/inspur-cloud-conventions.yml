@@ -1,0 +1,184 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/ecs/5-API/5.1-2-invoking-method.html
+docs:
+- https://console1.cloud.inspur.com/document/ecs/5-API/5.1-2-invoking-method.html
+- https://console1.cloud.inspur.com/document/iam/5-API/5.1-2-invoking-method.html
+- https://console1.cloud.inspur.com/document/oss/5-API/5.2-api-http-headers.html
+note: 'Read from the published calling-convention pages of the ECS, IAM, EBS, VPC, CPS, CBS,
+  RDS and OSS API references. Inspur Cloud does not publish a single cross-cutting API design
+  guide, and the conventions differ materially between product families — the compute/network
+  APIs use an Action/Version query-parameter RPC style, IAM and TSDB use resource-oriented
+  REST paths, and OSS is S3-shaped. That inconsistency is itself the finding.'
+transport:
+  protocol: HTTPS only for the platform APIs; TSDB documents HTTP or HTTPS with HTTPS
+    recommended
+  encoding: UTF-8 for both request and response
+  methods: GET, PUT, POST, DELETE, HEAD, PATCH
+styles:
+- family: compute-and-network
+  services: [ECS, CPS, EBS, CBS, VPC, EIP, IPTS, SLB, RDS]
+  style: RPC over query parameters
+  request_shape: 'https:// + host + ? + parameter string'
+  common_parameters:
+  - name: Action
+    required: true
+    description: Operation name, e.g. CreateServer
+  - name: Version
+    required: true
+    description: API version; ECS documents 2019-01-31
+  - name: Timestamp
+    required: true
+    description: Current UNIX timestamp
+  - name: Nonce
+    required: true
+    description: Random positive integer, for replay prevention
+  - name: Format
+    required: false
+    description: json or xml; the documented default is xml
+- family: resource-rest
+  services: [IAM, TSDB, IBot]
+  style: resource-oriented REST
+  request_shape: 'https:// + host + path + ? + parameter string'
+  examples:
+  - GET /auth/v1/policies/{pageIndex}/{pageSize}
+  - PATCH /auth/v1/policies/{policyId}
+  - POST /auth/v1/policies/{policyId}/action/attach-objects
+  - GET /tsdb/v1/tsdbs/{tsdbId}
+  - PUT /tsdb/v1/tsdbs/{tsdbId}/action/rename
+  note: 'Non-CRUD verbs are expressed as an /action/<verb> path segment rather than a custom
+    method — a consistent and readable pattern within this family.'
+- family: object-storage
+  services: [OSS]
+  style: S3-compatible REST
+  note: Bucket and object addressing, x-oss- metadata headers, and the S3 v2 signature.
+auth:
+  style: AK/SK request signature or IAM bearer token
+  see: authentication/inspur-cloud-authentication.yml
+response_envelope:
+  fields:
+  - name: RequestId
+    description: Request tracking identifier, returned on both success and error
+  - name: Code
+    description: Return code
+  - name: Data
+    description: Structured result payload
+  - name: Message
+    description: Human-readable description
+  success_status_codes: [200, 201, 202, 204]
+  format: 'JSON or XML, selected with the Format parameter; the documented default for the
+    compute/network family is XML.'
+  problem_json: false
+  rfc9457: false
+request_id_tracing:
+  supported: true
+  field: RequestId
+  location: response body
+  header: 'None documented. OSS responses carry an x-amz-request-id header (observed on a
+    live HEAD to the SDK bucket, 2026-08-23), but the platform APIs document the identifier
+    only as a body field, so there is no response header an agent can log on a non-2xx.'
+pagination:
+  style: 'path-segment page/size on the REST family (e.g. /auth/v1/policies/{pageIndex}/{pageSize},
+    /tsdb/v1/tsdbs/{pageNo}/{pageSize}); a separate "Page" operation is published alongside
+    the "List" operation for most resources.'
+  params: pageIndex/pageSize, pageNo/pageSize
+  response_fields: not documented
+  cursor: false
+  note: 'OSS list operations use S3 marker/prefix/max-keys semantics. There is no single
+    documented pagination envelope across the catalog.'
+async_operations:
+  supported: true
+  note: 'The ECS calling-convention page documents a distinct result shape for
+    "task-submitting" requests (提交任务类请求结果). Long-running operations such as
+    CreateServer, ResizeServer and RebuildServer return a task rather than the finished
+    resource, and callers poll the instance status table (20 states including build,
+    active, resize, reboot, deleted, error).'
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  detail: 'No idempotency key, request-deduplication header, or client-token parameter is
+    documented anywhere in the Inspur Cloud API references. The Nonce/x-random values exist
+    for replay PREVENTION — a repeated nonce is rejected as a replay — which is the opposite
+    of an idempotency key: it stops a retried request from being accepted at all rather than
+    making it safe to retry. The Inspur Cloud API Gateway product added a 防重放 (anti-replay)
+    feature in v2.7.0 (2022-03-22) for customer-published APIs, again replay protection
+    rather than idempotency. An agent retrying a failed CreateServer call has no published
+    way to avoid creating a second server.'
+versioning:
+  style: 'Two schemes coexist. The compute/network family carries a dated Version request
+    parameter (ECS: 2019-01-31). The REST family carries a path version segment (/auth/v1/,
+    /tsdb/v1/).'
+  breaking_change_policy: not published
+  see: lifecycle/inspur-cloud-lifecycle.yml
+rate_limit_signaling:
+  headers: none documented
+  status_on_exhaustion: not documented
+  see: rate-limits/inspur-cloud-rate-limits.yml
+field_expansion:
+  supported: false
+metadata:
+  supported: true
+  scope: 'OSS only — arbitrary user metadata on objects via x-oss-meta-* headers.'
+errors:
+  see: errors/inspur-cloud-problem-types.yml
+  scheme: 'Numeric dotted product codes in the response Code field (ECS uses the 101.XXXXXX
+    range). No RFC 9457 problem+json.'
+reversibility:
+  grade: documented
+  applies: true
+  note: 'Inspur Cloud publishes reversal PATHS for several destructive operations but states
+    a WINDOW for only one of them, and that window is a billing-lifecycle rule rather than an
+    API guarantee. Nothing in the API reference tells a caller how long a reversal remains
+    possible. Grade is `documented`, not `verified`.'
+  surfaces:
+  - operation: DeleteServer
+    service: ECS
+    reversal: none
+    window: null
+    detail: 'No undelete or restore operation is published for a deleted cloud server. The
+      instance status table includes a `deleted` state, but no operation transitions out of
+      it.'
+    docs: https://console1.cloud.inspur.com/document/ecs/5-API/5.1-1-api-overview.html
+  - operation: 'Prepaid (包年包月) resource expiry'
+    service: ECS
+    reversal: 'Renew — RenewServers, and console renewal'
+    window: '7 days. The pricing page states that after expiry the resource is still usable
+      until 00:00 the following day, service then stops, and the instance is retained in the
+      console for 7 days before automatic deletion. Expiry warnings are sent 7, 3 and 1 days
+      before.'
+    docs: https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+    grade: verified
+  - operation: 'Pay-as-you-go arrears (欠费)'
+    service: ECS
+    reversal: Top up the account balance to restore the instance
+    window: '7 days. Service stops in the second hour of arrears; the instance is retained in
+      the console for 7 days, after which it is automatically deleted. Delete remains
+      available while other functions are disabled.'
+    docs: https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+    grade: verified
+  - operation: Delete volume / Delete backup
+    service: EBS
+    reversal: 'Restore backup (回滚备份) restores a volume from a previously created backup.'
+    window: null
+    detail: 'Reversal depends on a backup existing beforehand; no retention window for
+      backups is stated in the API reference.'
+    docs: https://console1.cloud.inspur.com/document/ebs/5-API/5.1-1-api-overview.html
+  - operation: DeleteObject
+    service: OSS
+    reversal: 'Versioning — PutBucketVersioning; with versioning enabled a delete writes a
+      delete marker and previous versions remain retrievable.'
+    window: 'Unbounded while versioning is enabled; none when it is not. The service
+      introduction states plainly that a deleted file cannot be recovered
+      (文件删除后无法恢复), which is the default posture.'
+    docs: https://console1.cloud.inspur.com/document/oss/5-API/5.5-bucket/21-put-bucket-Versioning.html
+  - operation: Detach Policy / permission revocation
+    service: IAM
+    reversal: 'Re-attach — POST /auth/v1/policies/{policyId}/action/attach-objects'
+    window: not applicable
+    detail: Authorization changes are fully reversible by re-issuing the attach operation.
+    docs: https://console1.cloud.inspur.com/document/iam/5-API/5.1-1-api-overview.html
+dry_run_mode:
+  supported: false
+  detail: No preview, validate-only, or dry-run parameter is documented on any operation.

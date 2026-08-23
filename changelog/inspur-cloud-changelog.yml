@@ -1,0 +1,130 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/apig/8-release-note.html
+docs:
+- https://console1.cloud.inspur.com/document/apig/8-release-note.html
+- https://console1.cloud.inspur.com/document/oss/8-release-note.html
+- https://console1.cloud.inspur.com/document/iam/8-release-note.html
+- https://console1.cloud.inspur.com/document/iot/发版说明.html
+- https://console1.cloud.inspur.com/document/ecs/5-API/5.3-the-appendix.html
+note: 'Inspur Cloud publishes a dated 发布记录 (release record) page per product rather than one
+  platform changelog, and the entries describe product/console features rather than API
+  contract changes. The most striking property of these logs is that they have stopped: the
+  most recent entry found anywhere is 2023-06-01 on Object Storage, and the API Gateway log
+  ends at 2022-03-22. The ECS API''s own update history contains exactly one row — the
+  original 2019-01-31 release — meaning the compute API contract has not changed, or has not
+  been documented as changing, in seven years.'
+scheme: per-product dated release record
+freshness:
+  most_recent_entry: '2023-06-01'
+  most_recent_product: Object Storage Service (OSS)
+  days_since_most_recent_entry_at_capture: 1179
+  assessment: 'stale — no product changelog on the platform has an entry inside the last
+    three years'
+products:
+- product: API Gateway (APIG)
+  url: https://console1.cloud.inspur.com/document/apig/8-release-note.html
+  current_version: v2.7.0
+  first_entry: '2019-07-31'
+  latest_entry: '2022-03-22'
+  entry_count: 14
+  entries:
+  - version: v2.7.0
+    date: '2022-03-22'
+    highlights: [plugin management, anti-replay protection, link topology]
+    breaking: false
+  - version: v2.5.0
+    date: '2021-12-14'
+    highlights: [circuit-breaker management]
+    breaking: false
+  - version: v2.4.0
+    date: '2021-07-29'
+    highlights: [gateway activation billing, cloud log integration]
+    breaking: false
+  - version: v2.3.0
+    date: '2021-05-17'
+    highlights: [publish-history management, monitoring visualisation]
+    breaking: false
+  - version: v2.2.0
+    date: '2021-04-16'
+    highlights: [IAM permission policy integration, traffic control and subscription metering]
+    breaking: false
+  - version: v2.1.0
+    date: '2021-03-11'
+    highlights: [signing keys, backend mock, function-compute backend]
+    breaking: false
+  - version: v1.9.0
+    date: '2021-01-05'
+    highlights: [access control, automatic API documentation generation]
+    breaking: false
+  - version: v1.8.0
+    date: '2020-11-03'
+    highlights: [application management, API debugging]
+    breaking: false
+  - version: v1.7.0
+    date: '2020-08-07'
+    highlights: [response header-body transformation, auto-generated API docs, statistics]
+    breaking: false
+  - version: v1.5.0
+    date: '2020-04-24'
+    highlights: [Swagger import/export, traffic control]
+    breaking: false
+  - version: v1.4.0
+    date: '2020-02-27'
+    highlights: [IAM plugin supports AK/SK and token auth, online template testing]
+    breaking: false
+  - version: v1.0.0
+    date: '2019-07-31'
+    highlights: [initial release — open API groups and API management]
+    breaking: false
+- product: Object Storage Service (OSS)
+  url: https://console1.cloud.inspur.com/document/oss/8-release-note.html
+  first_entry: '2018-11-30'
+  latest_entry: '2023-06-01'
+  entry_count: 21
+  entries:
+  - date: '2023-06-01'
+    highlights: [S3Browser, S3cmd and Rclone operating documentation added]
+    breaking: false
+  - date: '2023-05-09'
+    highlights: [console static website hosting, Java SDK static website hosting and custom
+        domain]
+    breaking: false
+  - date: '2022-04-14'
+    highlights: [image processing performance work, rounded-corner and indexed cropping,
+      image metadata]
+    breaking: false
+  - date: '2021-10-26'
+    highlights: [static website hosting]
+    breaking: false
+  - date: '2021-07-20'
+    highlights: [uploads moved to a presigned upload flow]
+    breaking: false
+  - date: '2020-06-23'
+    highlights: [Java and C++ SDK documentation and download links published]
+    breaking: false
+  - date: '2020-02-14'
+    highlights: [append upload API documented]
+    breaking: false
+    additions: [AppendObject]
+  - date: '2019-12-18'
+    highlights: [bucket lifecycle]
+    breaking: false
+  - date: '2019-09-27'
+    highlights: [object versioning, parent/child account support]
+    breaking: false
+  - date: '2019-06-27'
+    highlights: [cn-south-1 region node added]
+    breaking: false
+  - date: '2018-11-30'
+    highlights: [initial release — bucket and object CRUD, ACL, batch delete, prefix search]
+    breaking: false
+- product: Elastic Cloud Server (ECS)
+  url: https://console1.cloud.inspur.com/document/ecs/5-API/5.3-the-appendix.html
+  first_entry: '2019-01-31'
+  latest_entry: '2019-01-31'
+  entry_count: 1
+  entries:
+  - date: '2019-01-31'
+    highlights: ['云服务器openapi发布 — initial release of the ECS OpenAPI']
+    breaking: false

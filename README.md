@@ -64,5 +64,32 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Inspur Cloud is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.hiive.com/securities/inspur-cloud-stock
+Inspur Cloud (浪潮云) is the public-cloud arm of the Chinese IT conglomerate Inspur Group,
+operating from cloud.inspur.com across the cn-north-3 (华北三), cn-south-1 (华南一) and
+cn-east-1 (华东一) regions. It documents 94 products, of which 16 publish a public HTTP API
+reference — roughly 460 documented operations covering compute, bare metal, block storage,
+backup, VPC networking, elastic IP, load balancing, IAM, MySQL, time-series database,
+container engine, blockchain, conversational AI, IoT and an S3-compatible object storage
+service.
+
+- Website: https://cloud.inspur.com/
+- Documentation: https://console1.cloud.inspur.com/document/
+- Console / sign-up: https://console1.cloud.inspur.com/
+- GitHub: https://github.com/OpenInspur
+
+### What this profile found
+
+- **No machine-readable contract.** No OpenAPI, Swagger, AsyncAPI, GraphQL SDL, JSON Schema,
+  Protobuf or WSDL is published anywhere. Every reference is hand-written GitBook HTML in
+  Simplified Chinese.
+- **No `/.well-known/` surface at all** — no `security.txt`, no OIDC discovery, no
+  api-catalog, no agent card. Every path returns a genuine 404.
+- **The documented API hosts do not present valid certificates.** Nine service hosts were
+  probed on 2026-08-23: four serve certificates that expired between 2020 and 2022, two
+  refuse TCP connections on both ports, one answers with a Kubernetes ingress default-backend
+  placeholder certificate, and one presents a certificate for a different name. Object
+  storage is the only documented endpoint that completes an ordinary verified HTTPS request.
+- **Object Storage implements the Amazon S3 contract**, signature scheme included, and Inspur
+  Cloud documents S3cmd, S3Browser and Rclone as supported clients.
+- **Documentation has gone quiet.** The most recent entry in any product changelog is
+  2023-06-01; the ECS API's own update history has a single row, dated 2019-01-31.

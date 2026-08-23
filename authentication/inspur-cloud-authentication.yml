@@ -1,0 +1,97 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/iam/9-signate.html
+docs:
+- https://console1.cloud.inspur.com/document/iam/9-signate.html
+- https://console1.cloud.inspur.com/document/ecs/5-API/5.1-2-invoking-method.html
+- https://console1.cloud.inspur.com/document/oss/5-API/5.3-access-control/01-user-signature.html
+note: 'Derived by reading the published documentation, not from an OpenAPI securitySchemes
+  block — Inspur Cloud publishes no machine-readable contract. Two distinct signing schemes
+  are in use: a proprietary AK/SK header signature for the platform APIs, and an
+  Amazon-S3-v2-style signature for Object Storage.'
+schemes:
+- id: aksk-signature
+  type: custom-signature
+  applies_to: All platform OpenAPIs (ECS, CPS, EBS, CBS, VPC, EIP, IPTS, SLB, IAM, RDS, TSDB)
+  credential: AccessKey ID (AK) + AccessKey Secret (SK), issued by Inspur Cloud IAM
+  transport: request headers
+  headers:
+  - name: x-secret-id
+    description: AccessKey ID (AK)
+  - name: x-sign-algorithm
+    description: Hash algorithm; sha1, md5 and sha256 are supported
+  - name: x-time
+    description: 13-digit millisecond epoch timestamp
+  - name: x-random
+    description: Random nonce string, generated per request
+  - name: x-sign
+    description: The computed signature value
+  signing_process:
+  - step: 1
+    detail: 'Sort all query and form parameters in lexicographic order by key, then join them
+      onto the URI absolute path as uri?key1=value1&key2=value2 to produce uriToSign.'
+  - step: 2
+    detail: 'Concatenate x-time + x-random + SK, in that order, with no separator, to produce
+      headerToSign.'
+  - step: 3
+    detail: MD5 the request body and hex-encode it to produce bodyToSign.
+  - step: 4
+    detail: 'Join httpMethod, headerToSign, uriToSign and bodyToSign with newline separators
+      to produce fullToSign.'
+  - step: 5
+    detail: 'Hash fullToSign with the chosen algorithm, hex-encode, then base64-encode the
+      result; send it as the x-sign header.'
+  replay_protection: 'x-time plus x-random act as a timestamp/nonce pair. The docs do not
+    state a clock-skew tolerance or a nonce retention window, so an integrator cannot tell
+    how long a signature stays valid.'
+  weaknesses:
+  - 'MD5 and SHA-1 are offered as signature algorithms alongside SHA-256, and MD5 is the
+    algorithm used in the worked example in the documentation.'
+  - 'The body digest is MD5 regardless of the chosen x-sign-algorithm.'
+  - 'The signature is a hash of a concatenated string, not an HMAC; the secret is embedded in
+    the hashed material rather than keying the hash.'
+- id: iam-token
+  type: bearer
+  applies_to: 'Platform OpenAPIs, as an alternative to AK/SK; the Inspur Cloud API Gateway
+    IAM plugin supports both since APIG v1.4.0 (2020-02-27).'
+  credential: Token obtained from the IAM GetToken interface
+  transport: header
+  headers:
+  - name: Authorization
+    description: Bearer <token>
+  note: 'The ECS calling-convention page states the Authorization header is required and
+    carries "Bearer [token]" obtained from the GetToken interface. Token lifetime, refresh
+    and revocation are not documented on the public reference pages.'
+- id: oss-signature
+  type: custom-signature
+  applies_to: Object Storage Service (OSS)
+  credential: AccessKey ID + AccessKey Secret
+  transport: Authorization header, or query-string presigned URL
+  algorithm: 'Signature = base64(HMAC-SHA1(AccessKeySecret, VERB + "\n" + Content-MD5 + "\n"
+    + Content-Type + "\n" + Date + "\n" + CanonicalizedOSSHeaders + CanonicalizedResource))'
+  canonical_headers_prefix: x-oss-
+  note: 'This is the Amazon S3 Signature Version 2 construction with an x-oss- header prefix.
+    It is what makes the service usable from S3cmd, S3Browser and Rclone, which Inspur Cloud
+    documents. Invalid signatures return HTTP 403.'
+- id: iccs-rsa-signature
+  type: custom-signature
+  applies_to: Inspur Cloud Code Service (ICCS)
+  credential: appId + secret issued by the ICCS platform, then a Token
+  transport: Token header
+  note: 'Requests are signed with an RSA private key and verified by the platform with the
+    matching public key; a Token obtained from the token endpoint is then sent in the Token
+    header alongside Content-Type application/json.'
+oauth2: false
+openid_connect: false
+mutual_tls: false
+mfa:
+  supported: true
+  detail: 'IAM exposes TOTP MFA management operations — GET /auth/v1/users/{userId}/action/
+    get-totp-register-info, POST .../bind-totp, PUT .../remove-totp, GET .../has-totp — so
+    MFA is an account control, not an API authentication factor.'
+gaps:
+- No OAuth 2.0 or OpenID Connect surface is published anywhere in the documentation.
+- No /.well-known/openid-configuration or /.well-known/oauth-authorization-server document
+  is served on any host (see well-known/inspur-cloud-well-known.yml).
+- 'Token lifetime, rotation and revocation are undocumented, as is the signature validity
+  window; an integrator has to discover both empirically.'

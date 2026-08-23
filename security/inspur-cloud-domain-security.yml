@@ -1,0 +1,142 @@
+generated: '2026-08-23'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: cloud.inspur.com
+  https: true
+  tls_version: TLSv1.2
+  cert_expires: Feb  6 23:59:59 2027 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: console1.cloud.inspur.com
+  https: true
+  tls_version: TLSv1.2
+  cert_expires: Feb  6 23:59:59 2027 GMT
+  hsts: false
+- host: ecs.cn-north-3.inspurcloudapi.com
+  https: true
+  tls_cert_error: '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+    certificate (_ssl.c:1129)'
+  hsts: null
+domains:
+- domain: inspur.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject
+- domain: inspurcloudapi.com
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: false
+findings:
+- id: expired-api-host-certificates
+  severity: high
+  detail: The public API endpoint hosts serve TLS certificates that expired years ago. ecs.cn-north-3.inspurcloudapi.com
+    presents CN=*.cn-north-3.inspurcloudapi.com issued by TrustAsia TLS RSA CA, valid 2019-12-10 to 2020-12-09.
+    ecs.cn-east-1.inspurcloudapi.com presents CN=*.cn-east-1.inspurcloudapi.com, valid 2021-07-09 to 2022-07-08.
+    Any client performing standard certificate validation cannot complete a TLS handshake with these hosts.
+  observed: '2026-08-23'
+  hosts:
+  - ecs.cn-north-3.inspurcloudapi.com
+  - ecs.cn-east-1.inspurcloudapi.com
+- id: api-host-certificate-name-mismatch
+  severity: medium
+  detail: iam.inspurcloudapi.com resolves via iam.cn-north-3.inspurcloudapi.com to a host presenting CN=*.cloud.inspur.com
+    (sslTrus DV CA, valid 2026-02-06 to 2027-02-06) — a currently-valid certificate for a different name
+    than the API host.
+  observed: '2026-08-23'
+- id: www-inspurcloudapi-is-not-the-provider
+  severity: info
+  detail: www.inspurcloudapi.com resolves to a ChinaNetCenter/Wangsu CDN edge presenting CN=default.chinanetcenter.com
+    with SANs for unrelated properties (4399.com, dianping.com, meituan.net). The apex inspurcloudapi.com
+    does not resolve. Only the <service>.<region>.inspurcloudapi.com names documented in the API references
+    are Inspur Cloud API hosts.
+  observed: '2026-08-23'
+- id: spf-dmarc-absent-on-api-domain
+  severity: low
+  detail: inspurcloudapi.com publishes neither SPF nor DMARC; the corporate domain inspur.com publishes
+    both, with a DMARC policy of reject.
+  observed: '2026-08-23'
+api_host_reachability:
+  probed: '2026-08-23'
+  method: direct TCP connect on 443 and 80, plus an unverified TLS handshake to read the presented certificate,
+    against every service host named in the Inspur Cloud API references
+  summary: Not one of the nine documented Inspur Cloud API endpoint hosts presents a currently-valid certificate
+    for its own name. Two refuse TCP connections entirely, four present certificates that expired between
+    2020 and 2022, one answers with a Kubernetes ingress default-backend placeholder certificate, and
+    one presents a certificate for a different name. Only the object-storage endpoint completes a normal
+    HTTPS request.
+  hosts:
+  - host: ecs.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.33
+    tcp_443: open
+    certificate: CN=*.cn-north-3.inspurcloudapi.com, TrustAsia TLS RSA CA
+    valid_from: '2019-12-10'
+    valid_to: '2020-12-09'
+    verdict: expired 2020-12-09
+  - host: ecs.cn-east-1.inspurcloudapi.com
+    tcp_443: open
+    certificate: CN=*.cn-east-1.inspurcloudapi.com, TrustAsia TLS RSA CA
+    valid_from: '2021-07-09'
+    valid_to: '2022-07-08'
+    verdict: expired 2022-07-08
+  - host: ecs.cn-south-1.inspurcloudapi.com
+    ip: 121.46.129.183
+    tcp_443: timeout
+    verdict: unreachable from outside China (connection timed out)
+  - host: ebs.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.33
+    tcp_443: open
+    certificate: CN=*.cn-north-3.inspurcloudapi.com
+    valid_to: '2020-12-09'
+    verdict: expired 2020-12-09
+  - host: vpc.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.33
+    tcp_443: open
+    certificate: CN=*.cn-north-3.inspurcloudapi.com
+    valid_to: '2020-12-09'
+    verdict: expired 2020-12-09
+  - host: eip.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.33
+    tcp_443: open
+    certificate: CN=*.cn-north-3.inspurcloudapi.com, O=山东浪潮云服务信息科技有限公司 (Shandong Inspur Cloud Service
+      Information Technology Co., Ltd.), OU=产品中心, L=济南, ST=山东
+    valid_from: '2019-01-30'
+    valid_to: '2020-02-03'
+    verdict: expired 2020-02-03 — the oldest of the set. This is also the only certificate in the estate
+      that names the operating legal entity, which independently confirms the inspurcloudapi.com API domain
+      belongs to Inspur Cloud.
+  - host: mysql.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.33
+    tcp_443: open
+    certificate: O=Acme Co, CN=Kubernetes Ingress Controller Fake Certificate
+    valid_from: '2026-07-31'
+    valid_to: '2027-07-31'
+    verdict: no ingress rule matches this hostname — the cluster is answering with the ingress-nginx default-backend
+      placeholder certificate, which means the documented RDS for MySQL API host is not routed
+  - host: cps.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.106
+    tcp_443: refused
+    tcp_80: refused
+    verdict: DNS resolves but nothing is listening on either port — the documented CPS API host is dead
+  - host: cbs.cn-north-3.inspurcloudapi.com
+    ip: 117.73.11.106
+    tcp_443: refused
+    tcp_80: refused
+    verdict: DNS resolves but nothing is listening on either port — the documented CBS API host is dead
+  - host: iam.inspurcloudapi.com
+    tcp_443: open
+    certificate: CN=*.cloud.inspur.com, sslTrus (RSA) DV CA
+    valid_from: '2026-02-06'
+    valid_to: '2027-02-06'
+    verdict: valid certificate for a different name — name mismatch against the documented IAM API host
+  - host: oss.cn-north-3.inspurcloudoss.com
+    ip: 117.73.1.16
+    tcp_443: open
+    verdict: the only documented API host that completes an ordinary verified HTTPS request; returned
+      HTTP 200 with x-amz-request-id and x-amz-object-type response headers
+  consequence: Any client with default certificate validation — every SDK, every HTTP library, every agent
+    runtime — fails to connect to the compute, storage, network, identity and database APIs as documented.
+    Object Storage is the only surface an outside integrator can call without disabling verification.

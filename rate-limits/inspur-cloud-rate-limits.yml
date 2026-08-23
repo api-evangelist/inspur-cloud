@@ -1,0 +1,79 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/oss/1-service-introduction.html
+docs:
+- https://console1.cloud.inspur.com/document/oss/1-service-introduction.html
+- https://console1.cloud.inspur.com/document/ecs/1-service-introduction.html
+- https://console1.cloud.inspur.com/document/apig/1-service-introduction.html
+note: 'Inspur Cloud publishes no API rate limits. Across all 16 documented API references
+  there is no requests-per-second figure, no burst allowance, no 429 semantics, and no
+  rate-limit response header of any kind — not X-RateLimit-*, not RateLimit-*, not
+  Retry-After. An agent calling these APIs has no runtime signal telling it how close it is
+  to being throttled, and no documented status code to recognise when it has been. What the
+  provider does publish is RESOURCE QUOTAS — caps on how many objects of a type an account
+  may hold — plus a traffic-control feature in the API Gateway PRODUCT that customers apply
+  to their own published APIs, not to Inspur Cloud''s platform APIs. Both are recorded below
+  and neither is a rate limit.'
+limit_count: 0
+response_headers: []
+status_on_exhaustion: not documented
+retry_after: not documented
+rate_limits: []
+resource_quotas:
+- service: OSS
+  scope: per account, per region
+  limit: 200 buckets
+  source: https://console1.cloud.inspur.com/document/oss/1-service-introduction.html
+- service: OSS
+  scope: per object, console upload
+  limit: 5 GiB maximum single-file upload through the console
+- service: OSS
+  scope: per object, multipart upload
+  limit: 48.8 TiB maximum object (max 5 GiB per part, max 10000 parts)
+- service: OSS
+  scope: per batch delete request, console
+  limit: 1000 objects; larger batches must go through the API or SDK
+- service: OSS
+  scope: per bucket
+  limit: 20 bound custom domains
+- service: OSS
+  scope: bandwidth
+  limit: 'no per-user upload or download bandwidth limit is currently applied
+    (单用户的上传和下载带宽暂时没有限制)'
+- service: ECS
+  scope: per availability zone
+  limit: 'per-resource default quotas exist and differ by availability zone; the values are
+    not published and are raised by contacting an account manager'
+  source: https://console1.cloud.inspur.com/document/ecs/1-service-introduction.html
+- service: ECS
+  scope: per instance
+  limit: security-group count per instance is capped; error 101.001018 is returned when the
+    threshold is exceeded
+- service: ECS
+  scope: per region
+  limit: private-image count per region is capped; error 101.003012 is returned when it is
+    exceeded
+- service: ECS
+  scope: per request
+  limit: batch key-pair deletion is capped at 100 keys (error 101.007011)
+quota_exhaustion_signal:
+  mechanism: error code in the response body
+  codes:
+  - code: '101.001021'
+    meaning: user quota %s insufficient
+  - code: '101.001020'
+    meaning: failed to obtain user quota
+  - code: '101.001018'
+    meaning: adding security group failed, security-group count above threshold
+  - code: '101.003012'
+    meaning: private-image count in the current region may not exceed %s
+  note: 'These are the closest thing to a throttling signal the platform publishes, and they
+    are capacity errors rather than rate errors. They are returned in the body, not as a
+    status code, so a client cannot distinguish them from any other failure without parsing.'
+gateway_traffic_control:
+  applies_to: customer-published APIs on the Inspur Cloud API Gateway product
+  detail: 'API Gateway shipped 流量控制 (traffic control) in v1.5.0 (2020-04-24), refined it in
+    v2.2.0 (2021-04-16) and added 熔断管理 (circuit-breaker management) in v2.5.0 (2021-12-14).
+    These let an APIG customer impose limits on APIs they publish; they say nothing about the
+    limits Inspur Cloud applies to its own platform APIs.'
+  source: https://console1.cloud.inspur.com/document/apig/8-release-note.html

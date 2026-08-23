@@ -1,0 +1,84 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/declaration/protocol/rank/ECS.html
+docs:
+- https://console1.cloud.inspur.com/document/declaration/index.html
+- https://console1.cloud.inspur.com/document/declaration/protocol/rank/ECS.html
+- https://console1.cloud.inspur.com/document/apig/8-release-note.html
+- https://console1.cloud.inspur.com/document/oss/8-release-note.html
+versioning:
+  scheme: 'Mixed. The compute/network APIs carry a dated Version request parameter — ECS
+    documents Version 2019-01-31 and has never published a second value. The REST-shaped APIs
+    carry a path version segment (/auth/v1/, /tsdb/v1/). Documentation itself is versioned
+    separately, per-product, in a 发布记录 (release record) page.'
+  current:
+    ECS: '2019-01-31'
+    IAM: v1
+    TSDB: v1
+  documented: true
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: 'No deprecation policy, notice period, sunset schedule or RFC 8594 Sunset/Deprecation
+    header is published for any Inspur Cloud API. No operation in any of the 16 API references
+    is marked deprecated. The user agreement covers service change and termination in
+    commercial terms only. The single dated statement resembling a lifecycle guarantee is the
+    resource-recycling rule on the pricing pages: prepaid resources are warned 7, 3 and 1 days
+    before expiry, stop serving at 00:00 the day after expiry, and are retained for 7 days
+    before automatic deletion.'
+status_page:
+  published: false
+  url: null
+  detail: 'No public service-health or status page was found. cloud.inspur.com/support/ offers
+    only a 7x24 hotline, an email address and an authenticated ticket queue at
+    bss.cloud.inspur.com/workorders/. There is no unauthenticated surface where an integrator
+    or an agent can see whether a region is degraded, and no incident history.'
+  probed:
+  - url: https://cloud.inspur.com/support/index.html
+    status: 200
+    finding: support and contact page, no service-health component
+sla:
+  published: true
+  form: 'Per-product service level agreements (服务等级协议) published as static documents
+    under /document/declaration/protocol/rank/<SERVICE>.html, alongside per-product usage
+    agreements under /protocol/use/.'
+  services_with_sla:
+  - ECS
+  - EBS
+  - OSS
+  - SLB
+  - RDS
+  - CDN
+  - APTS
+  - InDB
+  - IOT
+  - WAF
+  - MPS
+  commitments:
+  - service: ECS
+    availability: 99.95%
+    measurement_window: one calendar month, per instance
+    unavailability_definition: 'An ECS instance with permissive ingress/egress rules that
+      cannot be reached in either direction over TCP or UDP from any IP address, continuously
+      for more than 5 minutes.'
+    data_durability: 99.99999% for standard cloud disks, 99.999999% for SSD cloud disks
+    remedy: service credit, per the compensation schedule in the SLA
+    exclusions: 11 enumerated exclusions including announced maintenance, customer-side
+      network faults, customer application compromise, credential mishandling, and regulatory
+      instruction
+    url: https://console1.cloud.inspur.com/document/declaration/protocol/rank/ECS.html
+  - service: OSS
+    availability_claim: '99.99% service availability and 99.9999999999% (twelve nines) data
+      durability, stated in the OSS service introduction'
+    url: https://console1.cloud.inspur.com/document/oss/1-service-introduction.html
+  data_residency: 'The ECS SLA states that data stored in mainland-China data centres will not
+    be stored in overseas data centres or used for overseas business without the customer''s
+    consent, and that data is not provided to third parties except as required by law or
+    regulator.'
+change_log:
+  published: true
+  form: per-product 发布记录 pages
+  see: changelog/inspur-cloud-changelog.yml
+deprecated_operations: []

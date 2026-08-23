@@ -1,0 +1,126 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/oss/5-API/5.3-access-control/01-user-signature.html
+note: 'Assessed against the published documentation only. Inspur Cloud publishes no OpenAPI,
+  AsyncAPI, JSON Schema or other machine-readable contract anywhere on its surface, so every
+  contract-shaped assertion below is read from prose reference pages and from live response
+  headers observed on the public OSS endpoint.'
+standards:
+- id: openapi
+  conforms: false
+  evidence: 'No OpenAPI or Swagger document is served on cloud.inspur.com, console1.cloud.inspur.com,
+    en.inspur.com or any documented API host. /openapi.json, /swagger.json, /v2/api-docs and
+    /api-docs all return 404 or 403 (probed 2026-08-23). The API references are hand-written
+    GitBook HTML. The API Gateway PRODUCT supports Swagger import/export for customers
+    publishing their own APIs (APIG v1.5.0, 2020-04-24), but Inspur Cloud does not use it to
+    describe its own platform APIs.'
+- id: asyncapi
+  conforms: false
+  evidence: 'No AsyncAPI document and no event/webhook catalog. The only asynchronous surface
+    documented is MQTT for IoT devices, described in prose and in a C device SDK, with no
+    channel or message schema published.'
+- id: oauth2
+  conforms: false
+  evidence: 'No OAuth 2.0 authorization-server metadata, no authorization or token endpoint in
+    any public reference. Authentication is an AK/SK request signature or an IAM-issued
+    bearer token. /.well-known/oauth-authorization-server returns 404 on every host.'
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on every probed host.
+- id: rfc9457
+  conforms: false
+  evidence: 'Errors are a proprietary dotted numeric code in a JSON or XML body (Code /
+    Message / RequestId / Data). No application/problem+json. See
+    errors/inspur-cloud-problem-types.yml.'
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on every probed host.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation header, and no deprecation policy, is documented.
+- id: idempotency
+  conforms: false
+  evidence: 'No idempotency key or client token is documented on any write operation. The
+    Nonce and x-random values are replay PREVENTION, which is the opposite property. See
+    conventions/inspur-cloud-conventions.yml.'
+- id: pagination
+  conforms: partial
+  evidence: 'Page-based pagination is consistently offered in the REST-shaped APIs as a
+    separate "Page" operation with pageIndex/pageSize (IAM) or pageNo/pageSize (TSDB) path
+    segments, but no envelope, total count field, or cursor is documented, and the
+    compute/network APIs do not document pagination at all.'
+- id: rfc7807
+  conforms: false
+  evidence: superseded by RFC 9457; neither is used
+- id: json-schema
+  conforms: false
+  evidence: No JSON Schema documents are published; request and response shapes are described
+    in HTML parameter tables.
+domain_standards:
+- id: amazon-s3-api
+  name: Amazon S3 REST API (object storage de-facto standard)
+  conforms: true
+  grade: strong
+  evidence: 'Inspur Cloud Object Storage implements the S3 object-storage contract rather than
+    a bespoke one, and says so in the contract itself. (1) The published signature algorithm
+    is the Amazon S3 Signature Version 2 construction verbatim —
+    Signature = base64(HMAC-SHA1(AccessKeySecret, VERB + "\n" + Content-MD5 + "\n" +
+    Content-Type + "\n" + Date + "\n" + CanonicalizedOSSHeaders + CanonicalizedResource)) —
+    with the vendor header prefix x-oss- in place of x-amz-, documented at
+    /document/oss/5-API/5.3-access-control/01-user-signature.html. (2) The operation set is
+    the S3 operation set by name: ListBuckets, PutBucket, HeadBucket, DeleteBucket,
+    GetBucketLocation, PutBucketACL, GetBucketACL, PutBucketLifecycle, GetBucketLifecycle,
+    DeleteBucketLifecycle, ListMultipartUploads, PutBucketCors, PutBucketVersioning,
+    PutBucketEncryption, PutObject, AppendObject, GetObject, HeadObject, DeleteObject,
+    DeleteMulitipleObject, PutObjectACL, CopyObject, InitiateMultipartUpload, MultipartUpload,
+    CompleteMultipartUpload, AbortMultipartUpload. (3) The error envelope is the S3 XML Error
+    container with Code / Message / RequestId / Resource. (4) Inspur Cloud publishes operating
+    documentation for three third-party S3 clients — S3cmd, S3Browser and Rclone — as the
+    supported way to use the service, which is only possible if the wire contract is
+    S3-compatible. (5) A live unauthenticated HEAD against
+    inspur-cloud-sdk.oss.cn-north-3.inspurcloudoss.com on 2026-08-23 returned HTTP 200 with
+    x-amz-request-id and x-amz-object-type response headers, confirming the S3 contract at
+    runtime and not only on the documentation page.'
+  urls:
+  - https://console1.cloud.inspur.com/document/oss/5-API/5.3-access-control/01-user-signature.html
+  - https://console1.cloud.inspur.com/document/oss/6-SDK-and-tool/tool/S3cmd/S3cmd%E6%A6%82%E8%A7%88.html
+  buyer_impact: 'A team already speaking S3 can point an existing client, backup tool or data
+    pipeline at Inspur Cloud OSS with an endpoint and credential change. Every other Inspur
+    Cloud API requires a bespoke connector built from Chinese-language HTML documentation.'
+- id: opentsdb
+  name: OpenTSDB HTTP API
+  conforms: true
+  grade: partial
+  evidence: 'The Time Series Database API reference publishes a dedicated "opentsdb接口"
+    (OpenTSDB interface) group alongside its native /tsdb/v1 operations, so metric write and
+    query traffic can use the OpenTSDB wire protocol rather than an Inspur-specific one.'
+  urls:
+  - https://console1.cloud.inspur.com/document/tsdb/5-API/5.1-1-api-overview.html
+- id: kubernetes
+  name: Kubernetes API / CNCF cloud-provider interface
+  conforms: true
+  grade: partial
+  evidence: 'The container engine (ICE/CKS) exposes cluster, node, namespace and Istio
+    VirtualService concepts directly, and Inspur publishes an out-of-tree
+    cloud-controller-manager (github.com/OpenInspur/cloud-provider-inspur) and CSI-shaped
+    storage drivers (github.com/OpenInspur/instorage-k8s), which is the standard integration
+    contract rather than a proprietary one.'
+  urls:
+  - https://github.com/OpenInspur/cloud-provider-inspur
+  - https://console1.cloud.inspur.com/document/cks/9-opencontainer-api/9.1-1-container-menu.html
+- id: mqtt
+  name: MQTT
+  conforms: true
+  grade: partial
+  evidence: 'The IoT platform device SDK is an MQTT client built on mbedTLS with a device
+    shadow, and the documentation publishes a device protocol support page. Topic namespace
+    and payload schemas are not published, so this is protocol conformance without a
+    documented message contract (it is not, for example, Sparkplug B).'
+  urls:
+  - https://console1.cloud.inspur.com/document/iot/9-protocol-support.html
+compliance_certifications:
+  published: false
+  detail: 'No trust centre, certification page, or compliance programme listing (等保 / MLPS,
+    ISO 27001, 可信云, SOC 2) was found on cloud.inspur.com. Compliance-adjacent commitments
+    appear only inside the per-product SLA documents as data-residency, data-destruction and
+    audit-cooperation clauses. No Compliance pointer is emitted, because none is published.'

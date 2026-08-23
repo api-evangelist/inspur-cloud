@@ -1,18 +1,221 @@
 aid: inspur-cloud
 name: Inspur Cloud
-description: 'Inspur Cloud is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Inspur Cloud (浪潮云) is the public-cloud arm of the Chinese IT conglomerate
+  Inspur Group, operating from cloud.inspur.com across the cn-north-3 (华北三), cn-south-1
+  (华南一) and cn-east-1 (华东一) regions. It publishes a broad IaaS/PaaS catalog — 94 products
+  documented in its GitBook help centre — of which at least 16 ship a public HTTP API
+  reference covering elastic compute (ECS), bare metal (CPS), block storage (EBS), backup
+  (CBS), VPC networking, elastic IP, load balancing, IAM, RDS for MySQL, time-series
+  database, container engine, blockchain and an S3-compatible object storage service
+  (OSS). APIs are authenticated with an AK/SK request signature (x-secret-id / x-sign /
+  x-time / x-random headers) or an IAM-issued bearer token. No OpenAPI, AsyncAPI or other
+  machine-readable contract is published: the entire surface is hand-written HTML reference
+  documentation in Simplified Chinese.'
+image: https://cloud.inspur.com/cn/template/images/favicon.svg
 url: https://raw.githubusercontent.com/api-evangelist/inspur-cloud/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-23'
 modified: '2026-08-23'
 tags:
+- Cloud
+- Infrastructure
+- Compute
+- Storage
+- Networking
+- Object Storage
+- Identity
+- Database
+- Containers
+- Internet of Things
+- Blockchain
+- China
 - Company
-apis: []
+apis:
+- name: Inspur Cloud Elastic Cloud Server (ECS) API
+  description: 'REST API for Inspur Cloud''s elastic compute service: create, start, stop,
+    reboot, resize, rebuild and delete cloud servers, manage private images, security-group
+    membership, attached volumes, SSH key pairs and VNC console access. 51 documented
+    operations across seven interface groups. Action/Version query-parameter style with
+    Version 2019-01-31.'
+  humanURL: https://console1.cloud.inspur.com/document/ecs/5-API/5.1-1-api-overview.html
+  baseURL: https://ecs.cn-north-3.inspurcloudapi.com
+  tags:
+  - Compute
+  - Virtual Machines
+  properties:
+  - type: APIReference
+    url: https://console1.cloud.inspur.com/document/ecs/5-API/5.2-1-api-details.html
+  - type: ErrorCatalog
+    url: errors/inspur-cloud-problem-types.yml
+- name: Inspur Cloud Physical Server (CPS) API
+  description: REST API for Inspur Cloud's bare-metal cloud physical host service — list,
+    start, stop, reboot and inspect dedicated physical servers. 14 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/cps/5-API/5.1-1-api-overview.html
+  baseURL: https://cps.cn-north-3.inspurcloudapi.com
+  tags:
+  - Compute
+  - Bare Metal
+- name: Inspur Cloud Elastic Block Storage (EBS) API
+  description: REST API for Inspur Cloud block storage — create, extend, renew, attach,
+    detach and delete cloud disks, plus backup creation, restore, statistics and backup
+    strategy management. 52 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/ebs/5-API/5.1-1-api-overview.html
+  baseURL: https://ebs.cn-north-3.inspurcloudapi.com
+  tags:
+  - Storage
+  - Block Storage
+- name: Inspur Cloud Backup Service (CBS) API
+  description: REST API for Inspur Cloud's cloud backup service, covering backup jobs,
+    restore and backup policy operations. 10 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/cbs/5-API/5.1-1-api-overview.html
+  baseURL: https://cbs.cn-north-3.inspurcloudapi.com
+  tags:
+  - Storage
+  - Backup
+- name: Inspur Cloud Virtual Private Cloud (VPC) API
+  description: REST API for Inspur Cloud software-defined networking — create and manage
+    VPCs, subnets, route tables, routes, security groups and security-group rules. 26
+    documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/vpc/5-API/5.1-1-api-overview.html
+  baseURL: https://vpc.cn-north-3.inspurcloudapi.com
+  tags:
+  - Networking
+  - VPC
+- name: Inspur Cloud Elastic IP (EIP) API
+  description: REST API for elastic public IP addresses, shared bandwidth packages and the
+    IPv6 translation service — create, bind, unbind, resize bandwidth, renew and release.
+    27 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/eip/5-API/5.1-1-api-overview.html
+  baseURL: https://eip.cn-north-3.inspurcloudapi.com
+  tags:
+  - Networking
+  - IP Addresses
+- name: Inspur Cloud IPv6 Translation Service (IPTS) API
+  description: REST API for the IPv6 translation service that fronts IPv4 resources with
+    IPv6 addresses. 6 documented operations, served from the EIP host.
+  humanURL: https://console1.cloud.inspur.com/document/ipts/5-API/5.1-1-api-overview.html
+  baseURL: https://eip.cn-north-3.inspurcloudapi.com
+  tags:
+  - Networking
+  - IPv6
+- name: Inspur Cloud Server Load Balancer (SLB) API
+  description: 'REST API for Inspur Cloud load balancing: load balancer, listener, backend
+    server group, certificate and forwarding-strategy management, plus EIP binding. 40
+    documented operations. The reference does not publish the service host, so no baseURL
+    is asserted here.'
+  humanURL: https://console1.cloud.inspur.com/document/slb/5-API/5.1-1-api-overview.html
+  tags:
+  - Networking
+  - Load Balancing
+  x-base-url: undocumented
+- name: Inspur Cloud Identity and Access Management (IAM) API
+  description: REST API for Inspur Cloud identity — services and resource-type discovery,
+    policy CRUD and attach/detach, user and user-group management, MFA/TOTP binding, and
+    access-key management. 59 documented operations under /auth/v1, single global host
+    across all regions.
+  humanURL: https://console1.cloud.inspur.com/document/iam/5-API/5.1-1-api-overview.html
+  baseURL: https://iam.inspurcloudapi.com
+  tags:
+  - Identity
+  - Access Management
+  properties:
+  - type: Authentication
+    url: authentication/inspur-cloud-authentication.yml
+  - type: APIReference
+    url: https://console1.cloud.inspur.com/document/iam/9-signate.html
+- name: Inspur Cloud RDS for MySQL API
+  description: REST API for Inspur Cloud's managed MySQL relational database service —
+    instance lifecycle, instance classes, database and account management, backup, restore
+    and instance monitoring. 57 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/rds/5-API/1.1-1-api-overview.html
+  baseURL: https://mysql.cn-north-3.inspurcloudapi.com
+  tags:
+  - Database
+  - MySQL
+- name: Inspur Cloud Object Storage Service (OSS) API
+  description: 'S3-compatible REST API for Inspur Cloud object storage: ListBuckets,
+    PutBucket, HeadBucket, DeleteBucket, bucket ACL/lifecycle/CORS/versioning/encryption/
+    website/custom-domain configuration, and object PUT/GET/HEAD/DELETE, append upload,
+    copy, ACL and multipart upload. 34 documented operations. Requests are signed with the
+    Amazon S3 v2 style HMAC-SHA1 canonical string using x-oss- headers, and the service is
+    usable from S3cmd, S3Browser and Rclone.'
+  humanURL: https://console1.cloud.inspur.com/document/oss/5-API/5.1.2-api-overview.html
+  baseURL: https://oss.cn-north-3.inspurcloudoss.com
+  tags:
+  - Storage
+  - Object Storage
+  - S3
+  properties:
+  - type: SDKs
+    url: packages/inspur-cloud-packages.yml
+  - type: ChangeLog
+    url: https://console1.cloud.inspur.com/document/oss/8-release-note.html
+- name: Inspur Cloud Time Series Database (TSDB) API
+  description: REST API for Inspur Cloud's managed time-series database — instance
+    lifecycle, parameter configuration, data write and query, OpenTSDB-compatible
+    endpoints, HBase service and Ambari operations. 67 documented operations under
+    /tsdb/v1. The reference does not publish the service host.
+  humanURL: https://console1.cloud.inspur.com/document/tsdb/5-API/5.1-1-api-overview.html
+  tags:
+  - Database
+  - Time Series
+  x-base-url: undocumented
+- name: Inspur Cloud Container Engine (ICE/CKS) API
+  description: REST API for Inspur Cloud's Kubernetes container engine — application and
+    instance management, service mesh (VirtualService) discovery, service gateway routes,
+    cluster create/delete/scale, node and namespace operations. 34 documented operations.
+    The reference does not publish the service host.
+  humanURL: https://console1.cloud.inspur.com/document/cks/9-opencontainer-api/9.1-1-container-menu.html
+  tags:
+  - Containers
+  - Kubernetes
+  x-base-url: undocumented
+- name: Inspur Cloud Blockchain Service (IBaaS) API
+  description: REST API for Inspur Cloud blockchain-as-a-service instance management —
+    name checking, instance listing, instance detail and deletion. 5 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/ibaas/docs/api/5-API/5.1-1-api-overview.html
+  tags:
+  - Blockchain
+  x-base-url: undocumented
+- name: Inspur Cloud Consortium Chain Service (ACS) API
+  description: REST API for Inspur Cloud's consortium blockchain service — instance
+    management and renewal orders. 6 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/acs/docs/api/5-API/5.1-1-api-overview.html
+  tags:
+  - Blockchain
+  x-base-url: undocumented
+- name: Inspur Cloud IBot Conversational AI API
+  description: REST API for Inspur Cloud's IBot intelligent assistant — POST /qa/bot/sdk/talk
+    for a conversation turn, /qa/bot/sdk/similarities for a similar-question list and
+    /qa/bot/sdk/media for media files. 4 documented operations.
+  humanURL: https://console1.cloud.inspur.com/document/ibot/5-API-api-overview.html
+  tags:
+  - Artificial Intelligence
+  - Conversational AI
+  x-base-url: undocumented
+- name: Inspur Cloud IoT Platform API
+  description: Cloud-side and device-side API for the Inspur Cloud IoT platform, with an
+    MQTT device protocol, device dynamic registration and a C device SDK built on mbedTLS.
+  humanURL: https://console1.cloud.inspur.com/document/iot/5-API/IotOpenAPI.html
+  tags:
+  - Internet of Things
+  - MQTT
+  x-base-url: undocumented
+- name: Inspur Cloud API Gateway (APIG)
+  description: Inspur Cloud's API Gateway product, which lets customers publish their own
+    APIs with Swagger import/export, traffic control, circuit breaking, anti-replay, IAM
+    AK/SK and token auth plugins, mock and function-compute backends. Its own release
+    history runs from v1.0.0 (2019-07-31) to v2.7.0 (2022-03-22).
+  humanURL: https://console1.cloud.inspur.com/document/apig/4-operations-guide.html
+  tags:
+  - API Management
+  - Gateway
+  properties:
+  - type: ChangeLog
+    url: changelog/inspur-cloud-changelog.yml
+  x-base-url: undocumented
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +223,65 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.hiive.com/securities/inspur-cloud-stock
+  url: https://cloud.inspur.com/
+- type: DeveloperPortal
+  url: https://console1.cloud.inspur.com/document/
+- type: Documentation
+  url: https://console1.cloud.inspur.com/document/
+- type: APIReference
+  url: https://console1.cloud.inspur.com/document/ecs/5-API/5.1-1-api-overview.html
+- type: GettingStarted
+  url: https://console1.cloud.inspur.com/document/ecs/3-quickstart.html
+- type: Support
+  url: https://cloud.inspur.com/support/index.html
+- type: Blog
+  url: https://cloud.inspur.com/about-inspurcloud/about-us/news/index.html
+- type: SignUp
+  url: https://console1.cloud.inspur.com/
+- type: Login
+  url: https://console1.cloud.inspur.com/
+- type: TermsOfService
+  url: https://console1.cloud.inspur.com/document/declaration/protocol/client/client.html
+- type: PrivacyPolicy
+  url: https://cloud.inspur.com/privacy-policy/index.html
+- type: Pricing
+  url: https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+- type: Packages
+  url: packages/inspur-cloud-packages.yml
+- type: SDKs
+  url: packages/inspur-cloud-packages.yml
+- type: Authentication
+  url: authentication/inspur-cloud-authentication.yml
+- type: Conventions
+  url: conventions/inspur-cloud-conventions.yml
+- type: ErrorCatalog
+  url: errors/inspur-cloud-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/inspur-cloud-lifecycle.yml
+- type: ChangeLog
+  url: changelog/inspur-cloud-changelog.yml
+- type: Conformance
+  url: conformance/inspur-cloud-conformance.yml
+- type: DomainSecurity
+  url: security/inspur-cloud-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/inspur-cloud-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.inspur.com/lcjtww/2312126/2432763/index.html
+- type: DataModel
+  url: data-model/inspur-cloud-data-model.yml
+- type: Plans
+  url: plans/inspur-cloud-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/inspur-cloud-rate-limits.yml
+- type: MCPServer
+  url: mcp/inspur-cloud-mcp.yml
+- type: LLMsTxt
+  url: llms/inspur-cloud-llms.txt
+- type: GitHubOrganization
+  url: https://github.com/OpenInspur
+x-enrichment:
+  date: '2026-08-23'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

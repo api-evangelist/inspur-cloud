@@ -1,0 +1,281 @@
+generated: '2026-08-23'
+method: derived
+source: 'the published Inspur Cloud API reference operation tables (ECS, EBS, CBS, VPC, EIP,
+  IPTS, SLB, IAM, RDS, TSDB, CKS, OSS) — no OpenAPI exists to walk $ref links, so entities and
+  relationships are inferred from operation names, path parameters and the documented
+  resource vocabulary'
+note: 'Derived, not searched: Inspur Cloud publishes no object reference, no schema documents
+  and no ERD. Relationships marked confidence: low are read from operation naming alone
+  (e.g. ListVolumeAttachmentsByServer implies Server has_many Volume) rather than from a
+  documented field. No identifier prefix scheme is published for any resource type.'
+entities:
+- name: Server
+  service: ECS
+  id_field: serverId
+  operations: [CreateServer, StartServer, StopServer, RebootServer, DeleteServer, ListServers,
+    ResizeServer, ShowServersDetailed, ChangeAdministrativePassword, UpdateServerName,
+    RebuildServer, GetVncConsole, ExpandServerSystemDisk, RenewServers]
+  states: [build, active, stopped, shutoff, reboot, resize, deleted, expired, error]
+  note: The instance status table in the ECS appendix documents 20 states.
+- name: Image
+  service: ECS
+  id_field: imageId
+  operations: [CreateImage, ListImages, ShowImageDetails, UpdateImage, DeleteImage,
+    DeleteDatchImage]
+- name: Keypair
+  service: ECS
+  id_field: keypairName
+  operations: [CreateOrImportKeypair, DeleteKeypair, ListKeypairs]
+- name: SecurityGroup
+  service: VPC
+  operations: [CreateSecurityGroup, DeleteSecurityGroup, AddSecurityGroup, RemoveSecurityGroup,
+    UpdateSecurityGroup, ListSecurityGroupsByServer]
+- name: SecurityGroupRule
+  service: VPC
+  operations: [CreateSecurityGroupRule]
+- name: VPC
+  service: VPC
+  operations: [CreateVPC, DeleteVPC, ListVPCs]
+- name: Subnet
+  service: VPC
+  operations: [CreateSubnet, DeleteSubnet]
+- name: Route
+  service: VPC
+  operations: [AddRoute, DeleteRoute]
+- name: Volume
+  service: EBS
+  operations: [Create volume, Extend a volume size, Renew a Volume, Delete volume,
+    Update volume, List accessible volumes, Show a volume's details, Attach volume to a server,
+    Detach volume from server]
+- name: Backup
+  service: EBS / CBS
+  operations: [Create backup, Delete backup, List backups, Restore backup, Update Backup,
+    Get Backup Statistics]
+- name: BackupStrategy
+  service: EBS
+  operations: [Create Strategy, Delete Strategy]
+- name: EIP
+  service: EIP
+  operations: [Create EIP, Delete EIP, Bind EIP, Unbind EIP, List EIP, Show a EIP details,
+    Renew EIP, Update the Eip bindwidth]
+- name: SharedBandwidth
+  service: EIP
+  operations: [Create Sbw, Delete Sbw, List Sbws, Sbw Details, Sbw EipList, Rename Sbw,
+    EIP AddSbw, EIP RemoveSbw, Update the Sbw bindwidth, Renew SBW]
+- name: LoadBalancer
+  service: SLB
+  operations: [CreateLoadBalancer, BindEIPwithLoadBalance]
+- name: Listener
+  service: SLB
+  operations: [CreateListener]
+- name: BackendServerGroup
+  service: SLB
+  operations: [CreateBackendServerGroup]
+- name: Certificate
+  service: SLB
+  operations: [CreateCertificate]
+- name: ForwardingStrategy
+  service: SLB
+  operations: [CreateStrategy]
+- name: User
+  service: IAM
+  id_field: userId
+  operations: [List Users, Create User, Get User, Update User, Delete User, Change Password,
+    Bind Totp, Remove Totp, Has Totp, Get Totp Register Info]
+- name: UserGroup
+  service: IAM
+  operations: [List user groups, Create user group, Delete user group]
+- name: Policy
+  service: IAM
+  id_field: policyId
+  operations: [List Policies, Create Policy, Get Policy, Update Policy, Delete Policy,
+    Policy Attach Objects, Detach Policy, Authorizations]
+- name: Service
+  service: IAM
+  id_field: serviceId
+  operations: [List Services, Get Service]
+- name: ResourceType
+  service: IAM
+  id_field: resourceTypeId
+  operations: [List ResourceType Of Service, Get ResourceType]
+- name: Action
+  service: IAM
+  id_field: actionId
+  operations: [List Action Of ResourceType, Get Action]
+- name: AccessKey
+  service: IAM
+  operations: [key management interfaces (密钥相关接口)]
+- name: DBInstance
+  service: RDS
+  operations: [Create Instance, Instance Delete, Restart Instance, Rename Instance,
+    Instance Detail, Instance List, Instance Modify Storage, Auto Renew]
+- name: Database
+  service: RDS
+  operations: [Create Database, List Database, DELETE Database]
+- name: DBAccount
+  service: RDS
+  operations: [account interfaces (账号相关接口)]
+- name: TSDBInstance
+  service: TSDB
+  id_field: tsdbId
+  operations: [TSDB List, TSDB Info, TSDB Page, Update TSDB Name, Remove TSDB Locally,
+    Buy TSDB Instance, TSDB Change Config, TSDB Change Param]
+- name: Cluster
+  service: CKS
+  operations: [Create Kubernets Cluster, Delete Kubernets Cluster, Scaleup Kubernets Cluster]
+- name: Application
+  service: CKS
+  operations: [Create Application, List Application, Application Detail, Delete Application]
+- name: Bucket
+  service: OSS
+  operations: [PutBucket, ListBuckets, HeadBucket, DeleteBucket, GetBucketLocation,
+    PutBucketACL, GetBucketACL, PutBucketLifecycle, PutBucketCors, PutBucketVersioning,
+    PutBucketEncryption, SetBucketWebsite, SetBucketdomain]
+- name: Object
+  service: OSS
+  operations: [PutObject, AppendObject, GetObject, HeadObject, DeleteObject,
+    DeleteMulitipleObject, PutObjectACL, GetObjectACL, CopyObject, InitiateMultipartUpload,
+    MultipartUpload, CompleteMultipartUpload, AbortMultipartUpload]
+relationships:
+- from: Server
+  to: Volume
+  type: has_many
+  via: ListVolumeAttachmentsByServer / Attach volume to a server
+  confidence: high
+- from: Server
+  to: SecurityGroup
+  type: has_many
+  via: ListSecurityGroupsByServer / AddSecurityGroup / RemoveSecurityGroup
+  confidence: high
+- from: Server
+  to: Image
+  type: belongs_to
+  via: CreateServer takes an image; CreateImage is created from a server
+  confidence: high
+- from: Server
+  to: Keypair
+  type: belongs_to
+  via: 'CreateOrImportKeypair; error 101.007004 states a key cannot be reused while servers
+    still reference it'
+  confidence: high
+- from: Server
+  to: EIP
+  type: has_one
+  via: 'Bind EIP / Unbind EIP; ECS errors 101.006001 and 101.006002 cover EIP creation and
+    binding during server creation'
+  confidence: high
+- from: Server
+  to: VPC
+  type: belongs_to
+  via: ECS error 101.005002 (failed to obtain VPC information) is raised during server creation
+  confidence: medium
+- from: VPC
+  to: Subnet
+  type: has_many
+  via: CreateSubnet
+  confidence: high
+- from: VPC
+  to: Route
+  type: has_many
+  via: AddRoute / DeleteRoute on the route table
+  confidence: high
+- from: SecurityGroup
+  to: SecurityGroupRule
+  type: has_many
+  via: CreateSecurityGroupRule
+  confidence: high
+- from: Volume
+  to: Backup
+  type: has_many
+  via: Create backup / Get One Volume's Backup Quota Info / Get One Volume's Snap number
+  confidence: high
+- from: Volume
+  to: BackupStrategy
+  type: has_one
+  via: Create Strategy / Delete Strategy
+  confidence: medium
+- from: SharedBandwidth
+  to: EIP
+  type: has_many
+  via: EIP AddSbw / EIP RemoveSbw / Sbw EipList
+  confidence: high
+- from: LoadBalancer
+  to: Listener
+  type: has_many
+  via: CreateListener
+  confidence: high
+- from: Listener
+  to: BackendServerGroup
+  type: has_many
+  via: CreateBackendServerGroup
+  confidence: medium
+- from: Listener
+  to: Certificate
+  type: has_one
+  via: CreateCertificate under the SLB certificate management group
+  confidence: low
+- from: LoadBalancer
+  to: EIP
+  type: has_one
+  via: BindEIPwithLoadBalance
+  confidence: high
+- from: User
+  to: UserGroup
+  type: has_many
+  via: 'GET /auth/v1/users/{userId}/user-groups'
+  confidence: high
+- from: User
+  to: Policy
+  type: has_many
+  via: 'GET /auth/v1/users/{userId}/policies, POST /auth/v1/policies/{policyId}/action/attach-objects'
+  confidence: high
+- from: UserGroup
+  to: Policy
+  type: has_many
+  via: 'GET /auth/v1/policies/{policyId}/user-groups'
+  confidence: high
+- from: Service
+  to: ResourceType
+  type: has_many
+  via: 'GET /auth/v1/services/{serviceId}/resource-types'
+  confidence: high
+- from: ResourceType
+  to: Action
+  type: has_many
+  via: 'GET /auth/v1/services/{serviceId}/resource-types/{resourceTypeId}/actions'
+  confidence: high
+- from: User
+  to: AccessKey
+  type: has_many
+  via: IAM key management interfaces
+  confidence: medium
+- from: DBInstance
+  to: Database
+  type: has_many
+  via: Create Database / List Database
+  confidence: high
+- from: DBInstance
+  to: DBAccount
+  type: has_many
+  via: RDS account interfaces
+  confidence: high
+- from: DBInstance
+  to: Backup
+  type: has_many
+  via: RDS backup and restore interfaces
+  confidence: high
+- from: Cluster
+  to: Application
+  type: has_many
+  via: Create Instance (application instance) under a cluster namespace
+  confidence: medium
+- from: Bucket
+  to: Object
+  type: has_many
+  via: 'CanonicalizedResource is /BucketName/ObjectName; every object belongs to exactly one
+    bucket'
+  confidence: high
+identifier_scheme:
+  published: false
+  detail: No id prefix convention (in the style of Stripe's cus_/ch_) is documented for any
+    resource type.

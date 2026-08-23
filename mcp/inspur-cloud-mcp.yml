@@ -1,0 +1,141 @@
+generated: '2026-08-23'
+method: derived
+source: 'the published Inspur Cloud API reference operation tables; no MCP server exists'
+status: candidate
+note: 'Inspur Cloud ships no Model Context Protocol server, hosted or local. Searched the
+  product catalog, the 94-product documentation set, the OpenInspur GitHub organization, and
+  npm and PyPI (2026-08-23): the only npm packages matching "inspur" that touch agents are
+  third-party OpenClaw channel plugins (openclaw-inspur-yunjia, openclaw-yunjia-cli), which
+  wrap the consumer 浪潮云加 product rather than the cloud APIs, and are not published by
+  Inspur. The InspurClaw product line announced on cloud.inspur.com is a packaged OpenClaw
+  deployment offering — cloud service, cloud computer and appliance form factors — and its
+  product page mentions no MCP endpoint, agent card, API or SDK. The candidate tool list below
+  is DERIVED from documented operations so the surface is legible; it is not offered by the
+  provider and nothing here should be read as callable.'
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+search_evidence:
+- url: https://cloud.inspur.com/InspurClaw/index.html
+  status: 200
+  finding: 'OpenClaw deployment product line; no MCP, agent, API or SDK reference on the page'
+- url: https://console1.cloud.inspur.com/document/
+  status: 200
+  finding: 94 documented products, none an MCP server
+- url: https://registry.npmjs.org/-/v1/search?text=inspur
+  status: 200
+  finding: 30 results, no first-party MCP package
+- url: https://api.github.com/orgs/OpenInspur/repos
+  status: 200
+  finding: 6 repositories, none MCP-related
+candidate_tools:
+- name: list_servers
+  rest: ListServers
+  service: ECS
+  description: List cloud servers in a region
+  consequence: read
+- name: get_server
+  rest: ShowServersDetailed
+  service: ECS
+  description: Retrieve full detail for one cloud server
+  consequence: read
+- name: create_server
+  rest: CreateServer
+  service: ECS
+  description: Provision a cloud server
+  consequence: create-billable
+- name: start_server
+  rest: StartServer
+  service: ECS
+  consequence: state-change
+- name: stop_server
+  rest: StopServer
+  service: ECS
+  consequence: state-change-disruptive
+- name: delete_server
+  rest: DeleteServer
+  service: ECS
+  consequence: destructive-irreversible
+  note: No undelete operation is published.
+- name: list_images
+  rest: ListImages
+  service: ECS
+  consequence: read
+- name: list_volumes
+  rest: List accessible volumes
+  service: EBS
+  consequence: read
+- name: attach_volume
+  rest: Attach volume to a server
+  service: EBS
+  consequence: state-change
+- name: create_backup
+  rest: Create backup
+  service: EBS
+  consequence: create-billable
+- name: restore_backup
+  rest: Restore backup
+  service: EBS
+  consequence: destructive-overwrite
+- name: list_vpcs
+  rest: ListVPCs
+  service: VPC
+  consequence: read
+- name: list_eips
+  rest: List EIP
+  service: EIP
+  consequence: read
+- name: bind_eip
+  rest: Bind EIP
+  service: EIP
+  consequence: state-change
+- name: list_users
+  rest: List Users
+  service: IAM
+  consequence: read
+- name: list_policies
+  rest: List Policies
+  service: IAM
+  consequence: read
+- name: attach_policy
+  rest: Policy Attach Objects
+  service: IAM
+  consequence: privilege-change
+- name: detach_policy
+  rest: Detach Policy
+  service: IAM
+  consequence: privilege-change
+- name: list_buckets
+  rest: ListBuckets
+  service: OSS
+  consequence: read
+- name: put_object
+  rest: PutObject
+  service: OSS
+  consequence: write
+- name: get_object
+  rest: GetObject
+  service: OSS
+  consequence: read
+- name: delete_object
+  rest: DeleteObject
+  service: OSS
+  consequence: destructive-irreversible
+  note: 'Irreversible unless bucket versioning is enabled; the service introduction states
+    plainly that deleted files cannot be recovered.'
+- name: list_db_instances
+  rest: Instance List
+  service: RDS
+  consequence: read
+blockers:
+- 'No machine-readable contract exists, so a generated MCP server would have to be built from
+  hand-parsed Chinese-language HTML parameter tables rather than an OpenAPI document.'
+- 'The AK/SK signature requires ordered-parameter canonicalisation plus an MD5 body digest,
+  which an MCP server would have to reimplement per call; there is no bearer-token-only path
+  documented end to end.'
+- 'The documented API hosts serve TLS certificates that expired in 2020 and 2022, so a
+  standards-compliant HTTP client cannot reach them without disabling verification.'

@@ -1,0 +1,72 @@
+generated: '2026-08-23'
+method: searched
+source: https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+docs:
+- https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+- https://console1.cloud.inspur.com/document/oss/2-product-pricing.html
+- https://console1.cloud.inspur.com/document/iot/1-2service-price.html
+note: 'Inspur Cloud publishes per-product PRICING MODELS but not per-product PRICES. Every
+  product documentation set carries a 产品定价 page that explains what is billed and how the
+  billing cycles work; the unit rates themselves are only shown inside the authenticated
+  purchase flow at console1.cloud.inspur.com, with the standing statement that "the effective
+  billing model and prices published on the Inspur Cloud website prevail". There are no
+  named service tiers (no Free / Pro / Enterprise), so plan_count is 0 in the sense the
+  rating reads it, while two billing MODES are documented and recorded below. One concrete
+  unit price does appear in the public ECS documentation and is captured verbatim. There is
+  no free tier and no published free trial.'
+plan_count: 0
+currency: CNY
+billing_modes:
+- id: prepaid
+  name: 包年包月 (subscription / prepaid)
+  billing_period: month or year, paid in advance
+  unit: CNY per month
+  price: not published publicly
+  characteristics:
+  - Lower unit price than pay-as-you-go
+  - Minimum commitment of one month
+  - Upgrade of instance configuration supported at any time; downgrade is not
+  - Suited to steady, predictable capacity
+  expiry_behaviour: 'Warnings sent to the registered phone and email 7, 3 and 1 days before
+    expiry. The resource remains usable until 00:00 the day after expiry, then service stops
+    and the server is disabled and powered off. The instance is retained in the console for 7
+    days, after which the system deletes it automatically unless renewed.'
+- id: pay-as-you-go
+  name: 按需计费 (on-demand)
+  billing_period: metered per second, settled hourly on the hour (Beijing time)
+  unit: CNY per hour, charged on actual seconds used, rounded to 4 decimal places
+  price: not published publicly
+  characteristics:
+  - Roughly 3-4x the unit price of the prepaid mode, per the provider's own comparison
+  - Minimum account balance of CNY 100 required to open an on-demand instance
+  - Configuration can be raised or lowered at any time with no restriction
+  - Billing starts when the instance is created and ends when destroy is issued
+  arrears_behaviour: 'Arrears notice by email and SMS in the first hour with no service
+    interruption; service-stop notice in the second hour, at which point the server is
+    powered off and all functions except delete are disabled. The instance is retained in the
+    console for 7 days and then deleted automatically if the account is not topped up.'
+billable_items:
+  ECS:
+  - item: ECS instance
+    basis: instance type and specification (vCPU, memory), purchase duration, instance count
+  - item: image
+    basis: public images in the Inspur Cloud China site are currently free
+  - item: disk
+    basis: 'system disk defaults to 40 GiB and must be purchased; billed per EBS pricing'
+  - item: elastic public IP
+    basis: required for internet access; billed per EIP pricing
+published_unit_prices:
+- product: EBS standard cloud disk
+  price: 0.35
+  currency: CNY
+  unit: per GiB per month
+  source: https://console1.cloud.inspur.com/document/ecs/1-service-introduction.html
+  note: 'Published inline in the ECS service introduction alongside the disk IO reference
+    (peak 1000 IOPS, 10 ms latency, 3 replicas, 10-32768 GiB).'
+free_tier:
+  exists: false
+trial:
+  exists: false
+enterprise_contact_only: false
+pricing_page_url: https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html
+machine_readable_pricing: false
