@@ -11,6 +11,17 @@ description: 'Inspur Cloud (浪潮云) is the public-cloud arm of the Chinese IT
   x-time / x-random headers) or an IAM-issued bearer token. No OpenAPI, AsyncAPI or other
   machine-readable contract is published: the entire surface is hand-written HTML reference
   documentation in Simplified Chinese.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cloud.inspur.com/cn/template/images/favicon.svg
 url: https://raw.githubusercontent.com/api-evangelist/inspur-cloud/refs/heads/main/apis.yml
 x-type: company
