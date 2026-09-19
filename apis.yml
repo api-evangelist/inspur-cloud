@@ -53,6 +53,20 @@ tags:
 - Identity
 - Database
 - Containers
+- IoT
+- Blockchain
+- China
+- Company
+tags_raw:
+- Cloud
+- Infrastructure
+- Compute
+- Storage
+- Networking
+- Object Storage
+- Identity
+- Database
+- Containers
 - Internet of Things
 - Blockchain
 - China
@@ -115,6 +129,9 @@ apis:
   humanURL: https://console1.cloud.inspur.com/document/eip/5-API/5.1-1-api-overview.html
   baseURL: https://eip.cn-north-3.inspurcloudapi.com
   tags:
+  - Networking
+  - IP Address
+  tags_raw:
   - Networking
   - IP Addresses
 - name: Inspur Cloud IPv6 Translation Service (IPTS) API
@@ -225,6 +242,9 @@ apis:
     MQTT device protocol, device dynamic registration and a C device SDK built on mbedTLS.
   humanURL: https://console1.cloud.inspur.com/document/iot/5-API/IotOpenAPI.html
   tags:
+  - IoT
+  - MQTT
+  tags_raw:
   - Internet of Things
   - MQTT
   x-base-url: undocumented
@@ -235,6 +255,9 @@ apis:
     history runs from v1.0.0 (2019-07-31) to v2.7.0 (2022-03-22).
   humanURL: https://console1.cloud.inspur.com/document/apig/4-operations-guide.html
   tags:
+  - API Management
+  - Gateways
+  tags_raw:
   - API Management
   - Gateway
   properties:
