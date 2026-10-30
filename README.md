@@ -64,32 +64,131 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Inspur Cloud (浪潮云) is the public-cloud arm of the Chinese IT conglomerate Inspur Group,
-operating from cloud.inspur.com across the cn-north-3 (华北三), cn-south-1 (华南一) and
-cn-east-1 (华东一) regions. It documents 94 products, of which 16 publish a public HTTP API
-reference — roughly 460 documented operations covering compute, bare metal, block storage,
-backup, VPC networking, elastic IP, load balancing, IAM, MySQL, time-series database,
-container engine, blockchain, conversational AI, IoT and an S3-compatible object storage
-service.
+Inspur Cloud (浪潮云) is the public-cloud arm of the Chinese IT conglomerate Inspur Group, operating from cloud.inspur.com across the cn-north-3 (华北三), cn-south-1 (华南一) and cn-east-1 (华东一) regions. It publishes a broad IaaS/PaaS catalog — 94 products documented in its GitBook help centre — of which at least 16 ship a public HTTP API reference covering elastic compute (ECS), bare metal (CPS), block storage (EBS), backup (CBS), VPC networking, elastic IP, load balancing, IAM, RDS for MySQL, time-series database, container engine, blockchain and an S3-compatible object storage service (OSS). APIs are authenticated with an AK/SK request signature (x-secret-id / x-sign / x-time / x-random headers) or an IAM-issued bearer token. No OpenAPI, AsyncAPI or other machine-readable contract is published: the entire surface is hand-written HTML reference documentation in Simplified Chinese.
 
-- Website: https://cloud.inspur.com/
-- Documentation: https://console1.cloud.inspur.com/document/
-- Console / sign-up: https://console1.cloud.inspur.com/
-- GitHub: https://github.com/OpenInspur
+**Areas:** Cloud · Infrastructure · Compute · Storage · Networking · Object Storage · Identity · Database · Containers · IoT · Blockchain · China
 
-### What this profile found
+## Inspur Cloud on APIs.io
 
-- **No machine-readable contract.** No OpenAPI, Swagger, AsyncAPI, GraphQL SDL, JSON Schema,
-  Protobuf or WSDL is published anywhere. Every reference is hand-written GitBook HTML in
-  Simplified Chinese.
-- **No `/.well-known/` surface at all** — no `security.txt`, no OIDC discovery, no
-  api-catalog, no agent card. Every path returns a genuine 404.
-- **The documented API hosts do not present valid certificates.** Nine service hosts were
-  probed on 2026-08-23: four serve certificates that expired between 2020 and 2022, two
-  refuse TCP connections on both ports, one answers with a Kubernetes ingress default-backend
-  placeholder certificate, and one presents a certificate for a different name. Object
-  storage is the only documented endpoint that completes an ordinary verified HTTPS request.
-- **Object Storage implements the Amazon S3 contract**, signature scheme included, and Inspur
-  Cloud documents S3cmd, S3Browser and Rclone as supported clients.
-- **Documentation has gone quiet.** The most recent entry in any product changelog is
-  2023-06-01; the ECS API's own update history has a single row, dated 2019-01-31.
+Everything profiled for Inspur Cloud is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/inspur-cloud/](https://apis.io/providers/inspur-cloud/)** — or go straight to one of the APIs or properties below.
+
+### APIs (18)
+
+- [Inspur Cloud Elastic Cloud Server (ECS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-elastic-cloud-server-ecs-api/) — REST API for Inspur Cloud's elastic compute service: create, start, stop, reboot, resize, rebuild and delete cloud servers, manage private images,…
+- [Inspur Cloud Physical Server (CPS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-physical-server-cps-api/) — REST API for Inspur Cloud's bare-metal cloud physical host service — list, start, stop, reboot and inspect dedicated physical servers. 14 documented operations.
+- [Inspur Cloud Elastic Block Storage (EBS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-elastic-block-storage-ebs-api/) — REST API for Inspur Cloud block storage — create, extend, renew, attach, detach and delete cloud disks, plus backup creation, restore, statistics and backup…
+- [Inspur Cloud Backup Service (CBS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-backup-service-cbs-api/) — REST API for Inspur Cloud's cloud backup service, covering backup jobs, restore and backup policy operations. 10 documented operations.
+- [Inspur Cloud Virtual Private Cloud (VPC) API](https://apis.io/apis/inspur-cloud/inspur-cloud-virtual-private-cloud-vpc-api/) — REST API for Inspur Cloud software-defined networking — create and manage VPCs, subnets, route tables, routes, security groups and security-group rules. 26…
+- [Inspur Cloud Elastic IP (EIP) API](https://apis.io/apis/inspur-cloud/inspur-cloud-elastic-ip-eip-api/) — REST API for elastic public IP addresses, shared bandwidth packages and the IPv6 translation service — create, bind, unbind, resize bandwidth, renew and…
+- [Inspur Cloud IPv6 Translation Service (IPTS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-ipv6-translation-service-ipts-api/) — REST API for the IPv6 translation service that fronts IPv4 resources with IPv6 addresses. 6 documented operations, served from the EIP host.
+- [Inspur Cloud Server Load Balancer (SLB) API](https://apis.io/apis/inspur-cloud/inspur-cloud-server-load-balancer-slb-api/) — REST API for Inspur Cloud load balancing: load balancer, listener, backend server group, certificate and forwarding-strategy management, plus EIP binding.…
+- [Inspur Cloud Identity and Access Management (IAM) API](https://apis.io/apis/inspur-cloud/inspur-cloud-identity-and-access-management-iam-api/) — REST API for Inspur Cloud identity — services and resource-type discovery, policy CRUD and attach/detach, user and user-group management, MFA/TOTP binding,…
+- [Inspur Cloud RDS for MySQL API](https://apis.io/apis/inspur-cloud/inspur-cloud-rds-for-mysql-api/) — REST API for Inspur Cloud's managed MySQL relational database service — instance lifecycle, instance classes, database and account management, backup,…
+- [Inspur Cloud Object Storage Service (OSS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-object-storage-service-oss-api/) — S3-compatible REST API for Inspur Cloud object storage: ListBuckets, PutBucket, HeadBucket, DeleteBucket, bucket ACL/lifecycle/CORS/versioning/encryption/…
+- [Inspur Cloud Time Series Database (TSDB) API](https://apis.io/apis/inspur-cloud/inspur-cloud-time-series-database-tsdb-api/) — REST API for Inspur Cloud's managed time-series database — instance lifecycle, parameter configuration, data write and query, OpenTSDB-compatible endpoints,…
+- [Inspur Cloud Container Engine (ICE/CKS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-container-engine-icecks-api/) — REST API for Inspur Cloud's Kubernetes container engine — application and instance management, service mesh (VirtualService) discovery, service gateway…
+- [Inspur Cloud Blockchain Service (IBaaS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-blockchain-service-ibaas-api/) — REST API for Inspur Cloud blockchain-as-a-service instance management — name checking, instance listing, instance detail and deletion. 5 documented operations.
+- [Inspur Cloud Consortium Chain Service (ACS) API](https://apis.io/apis/inspur-cloud/inspur-cloud-consortium-chain-service-acs-api/) — REST API for Inspur Cloud's consortium blockchain service — instance management and renewal orders. 6 documented operations.
+- [Inspur Cloud IBot Conversational AI API](https://apis.io/apis/inspur-cloud/inspur-cloud-ibot-conversational-ai-api/) — REST API for Inspur Cloud's IBot intelligent assistant — POST /qa/bot/sdk/talk for a conversation turn, /qa/bot/sdk/similarities for a similar-question list…
+- [Inspur Cloud IoT Platform API](https://apis.io/apis/inspur-cloud/inspur-cloud-iot-platform-api/) — Cloud-side and device-side API for the Inspur Cloud IoT platform, with an MQTT device protocol, device dynamic registration and a C device SDK built on mbedTLS.
+- [Inspur Cloud API Gateway (APIG)](https://apis.io/apis/inspur-cloud/inspur-cloud-api-gateway-apig/) — Inspur Cloud's API Gateway product, which lets customers publish their own APIs with Swagger import/export, traffic control, circuit breaking, anti-replay,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [inspur-cloud-mcp.yml](https://apis.io/servers/inspur-cloud/inspur-cloud-mcp-yml/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Inspur Cloud Authentication](https://apis.io/security/inspur-cloud/inspur-cloud-authentication/)
+- [Inspur Cloud Domain Security](https://apis.io/security/inspur-cloud/inspur-cloud-domain-security/)
+- [Inspur Cloud Vulnerability Disclosure](https://apis.io/security/inspur-cloud/inspur-cloud-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Inspur Cloud Plans Pricing](https://apis.io/plans/inspur-cloud/inspur-cloud-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Inspur Cloud Rate Limits](https://apis.io/rate-limits/inspur-cloud/inspur-cloud-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://cloud.inspur.com/)
+- [Documentation](https://console1.cloud.inspur.com/document/)
+- [Getting started](https://console1.cloud.inspur.com/document/ecs/3-quickstart.html)
+- [API reference](https://console1.cloud.inspur.com/document/ecs/5-API/5.1-1-api-overview.html)
+- [Pricing](https://console1.cloud.inspur.com/document/ecs/2-product-pricing.html)
+- [Sign up](https://console1.cloud.inspur.com/)
+- [Support](https://cloud.inspur.com/support/index.html)
+- [Blog](https://cloud.inspur.com/about-inspurcloud/about-us/news/index.html)
+- [Security](https://www.inspur.com/lcjtww/2312126/2432763/index.html)
+- [Terms of service](https://console1.cloud.inspur.com/document/declaration/protocol/client/client.html)
+- [Privacy policy](https://cloud.inspur.com/privacy-policy/index.html)
+- [GitHub](https://github.com/OpenInspur)
+
+## API Evangelist rating
+
+**Kin Score 34.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 62.5 |
+| Contract quality | 0.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 28.9 |
+| Developer ergonomics | 64.3 |
+| Access clarity | 44.7 |
+
+**Agent readiness 7.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 30.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/inspur-cloud/](https://apis.io/providers/inspur-cloud/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Inspur Cloud: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/inspur-cloud/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
